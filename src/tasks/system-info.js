@@ -3,12 +3,16 @@ const Multispinner = require('multispinner');
 const figures = require('figures');
 
 class SystemInfo {
-	constructor(fs) {
+	constructor(fs, event) {
 		this.fs = fs;
+		this.event = event;
+		this.done = false;
 		this.data = {};
 		this.spinners = ['System', 'BIOS', 'MotherBoard', 'CPU', 'RAM', 'Disk', 'GPU', 'Operating System',
 			'Network Interfaces', 'DNS', 'Ping', 'Current Processes'];
+	}
 
+	async _run() {
 		this.spinner = new Multispinner(this.spinners, {
 			indent: 2,
 			frames: ['[-]', '[\\]', '[|]', '[/]'],
@@ -16,16 +20,14 @@ class SystemInfo {
 				success: '[' + figures.tick + ']',
 				error: '[' + figures.cross + ']'
 			}
-    });
-    
-		this._run();
+		});
 
 		this.spinner.on('done', () => {
+			this.done = true;
 			this.fs.saveJSON(this.data);
+			this.event.emit('system_done');
 		});
-	}
 
-	async _run() {
 		try {
 			this.system(this.spinners[0]);
 			this.bios(this.spinners[1]);
@@ -40,15 +42,10 @@ class SystemInfo {
 			this.checkPing(this.spinners[10]);
 			this.currentProcesses(this.spinners[11]);
 		} catch (error) {
-			console.log('error');
+			console.log(error);
 		}
 	}
 
-	/**
-   * Gets the System data and update the spinner state
-   *
-   * @param {String} spinnerID
-   */
 	async system(spinnerID) {
 		try {
 			const data = await si.system();
@@ -60,11 +57,6 @@ class SystemInfo {
 		}
 	}
 
-	/**
-   * Gets the BIOS data and update the spinner state
-   *
-   * @param {String} spinnerID
-   */
 	async bios(spinnerID) {
 		try {
 			const data = await si.bios();
@@ -76,11 +68,6 @@ class SystemInfo {
 		}
 	}
 
-	/**
-   * Gets the Motherboard data and update the spinner state
-   *
-   * @param {String} spinnerID
-   */
 	async motherBoard(spinnerID) {
 		try {
 			const data = await si.baseboard();
@@ -92,11 +79,6 @@ class SystemInfo {
 		}
 	}
 
-	/**
-   * Gets the CPU data and update the spinner state
-   *
-   * @param {String} spinnerID
-   */
 	async cpu(spinnerID) {
 		try {
 			const data = await si.cpu();
@@ -108,11 +90,6 @@ class SystemInfo {
 		}
 	}
 
-	/**
-   * Gets the Memeory data and update the spinner state
-   *
-   * @param {String} spinnerID
-   */
 	async memory(spinnerID) {
 		try {
 			const data = await si.mem();
@@ -124,11 +101,6 @@ class SystemInfo {
 		}
 	}
 
-	/**
-   * Gets the Disk data and update the spinner state
-   *
-   * @param {String} spinnerID
-   */
 	async disk(spinnerID) {
 		try {
 			const data = await si.fsSize();
@@ -140,11 +112,6 @@ class SystemInfo {
 		}
 	}
 
-	/**
-   * Gets the GPU data and update the spinner state
-   *
-   * @param {String} spinnerID
-   */
 	async graphics(spinnerID) {
 		try {
 			const data = await si.graphics();
@@ -156,11 +123,6 @@ class SystemInfo {
 		}
 	}
 
-	/**
-   * Gets the OS and update the spinner state
-   *
-   * @param {String} spinnerID
-   */
 	async os(spinnerID) {
 		try {
 			const data = await si.osInfo();
@@ -172,11 +134,6 @@ class SystemInfo {
 		}
 	}
 
-	/**
-   * Gets the Network Interfaces and update the spinner state
-   *
-   * @param {String} spinnerID
-   */
 	async netWorkInterfaces(spinnerID) {
 		try {
 			const data = await si.networkInterfaces();
@@ -188,11 +145,6 @@ class SystemInfo {
 		}
 	}
 
-	/**
-   * Checks if google can be accessed and update the spinner state
-   *
-   * @param {String} spinnerID
-   */
 	async checkSite(spinnerID) {
 		try {
 			const data = await si.inetChecksite('https://google.com');
@@ -204,11 +156,6 @@ class SystemInfo {
 		}
 	}
 
-	/**
-   * Checks the ping to 8.8.8.8 and update the spinner state
-   *
-   * @param {String} spinnerID
-   */
 	async checkPing(spinnerID) {
 		try {
 			const data = await si.inetLatency('8.8.8.8');
@@ -220,11 +167,6 @@ class SystemInfo {
 		}
 	}
 
-	/**
-   * Get's the current open processes and update the spinner state
-   *
-   * @param {String} spinnerID
-   */
 	async currentProcesses(spinnerID) {
 		try {
 			const data = await si.processes();

@@ -63,3 +63,5 @@ typings/
 # generated files
 system.json
 tmp/
+result.zip
+*.exe

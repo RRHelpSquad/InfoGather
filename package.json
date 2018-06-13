@@ -2,9 +2,11 @@
   "name": "infogather",
   "version": "0.1.0",
   "description": "gathers required logs and other information required to help with troubleshooting ",
-  "main": "src/main.js",
+  "main": "./src/main.js",
+  "bin": "./src/main.js",
   "scripts": {
     "start": "node src/main.js",
+    "build": "pkg --targets node8-win-x86 .",
     "test": "xo",
     "lint": "xo",
     "lint:fix": "xo --fix"
@@ -23,11 +25,21 @@
     "xo": "^0.21.1"
   },
   "dependencies": {
+    "archiver": "^2.1.1",
     "debug": "^3.1.0",
     "figures": "^2.0.0",
     "jsonfile": "^4.0.0",
     "multispinner": "^0.2.1",
+    "node-native-zip": "^1.1.0",
     "pkg": "^4.3.1",
-    "systeminformation": "^3.42.0"
+    "registry-apppaths": "^1.1.24",
+    "shelljs": "^0.8.2",
+    "systeminformation": "^3.42.0",
+    "vdfjs": "^2.0.3"
+  },
+  "xo": {
+    "rules": {
+      "no-prototype-builtins": 0
+    }
   }
 }
