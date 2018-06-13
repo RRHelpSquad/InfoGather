@@ -3,13 +3,17 @@ const Multispinner = require('multispinner');
 const figures = require('figures');
 
 class SystemInfo {
-	constructor(fs) {
-		this.fs = fs;
+	constructor(fs, event) {
+    this.fs = fs;
+    this.event = event;
+    this.done = false;
 		this.data = {};
 		this.spinners = ['System', 'BIOS', 'MotherBoard', 'CPU', 'RAM', 'Disk', 'GPU', 'Operating System',
 			'Network Interfaces', 'DNS', 'Ping', 'Current Processes'];
+	}
 
-		this.spinner = new Multispinner(this.spinners, {
+	async _run() {
+    this.spinner = new Multispinner(this.spinners, {
 			indent: 2,
 			frames: ['[-]', '[\\]', '[|]', '[/]'],
 			symbol: {
@@ -18,14 +22,12 @@ class SystemInfo {
 			}
     });
     
-		this._run();
-
 		this.spinner.on('done', () => {
-			this.fs.saveJSON(this.data);
-		});
-	}
-
-	async _run() {
+      this.done = true;
+      this.fs.saveJSON(this.data);
+      this.event.emit("system_done");
+    });
+    
 		try {
 			this.system(this.spinners[0]);
 			this.bios(this.spinners[1]);
@@ -40,7 +42,7 @@ class SystemInfo {
 			this.checkPing(this.spinners[10]);
 			this.currentProcesses(this.spinners[11]);
 		} catch (error) {
-			console.log('error');
+			console.log(error);
 		}
 	}
 
