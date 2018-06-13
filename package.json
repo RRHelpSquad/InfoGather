@@ -1,0 +1,33 @@
+{
+  "name": "infogather",
+  "version": "0.1.0",
+  "description": "gathers required logs and other information required to help with troubleshooting ",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "xo",
+    "lint": "xo",
+    "lint:fix": "xo --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RRHelpSquad/InfoGather.git"
+  },
+  "author": "Mike 'Bultz' Pedersen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RRHelpSquad/InfoGather/issues"
+  },
+  "homepage": "https://github.com/RRHelpSquad/InfoGather#readme",
+  "devDependencies": {
+    "xo": "^0.21.1"
+  },
+  "dependencies": {
+    "debug": "^3.1.0",
+    "figures": "^2.0.0",
+    "jsonfile": "^4.0.0",
+    "multispinner": "^0.2.1",
+    "pkg": "^4.3.1",
+    "systeminformation": "^3.42.0"
+  }
+}
