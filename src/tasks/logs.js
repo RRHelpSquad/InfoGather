@@ -87,11 +87,14 @@ class Logs {
 	async _findRealmRoyale() {
 		await shell.exec('reg query HKEY_CURRENT_USER\\Software\\Valve\\Steam /v SteamPath /s', {silent: true}, (code, stdout) => {
 			this.steamPath = stdout.split('\r\n')[2].split('    ')[3];
+			this.steamLibaries.push(this.steamPath + '\\steamapps\\common\\');
+
 			const libaryVDF = fs.readFileSync(this.steamPath + '\\steamapps\\libraryfolders.vdf', 'utf-8');
 			this.libaryVDF = vdf.parse(libaryVDF);
 
-			this.steamLibaries.push(this.steamPath + '\\steamapps\\common\\');
-			this.steamLibaries.push(this.libaryVDF.LibraryFolders[1].replace('\\\\', '/') + '\\steamapps\\common\\');
+			if (this.libaryVDF.LibraryFolders.hasOwnProperty('1')) {
+				this.steamLibaries.push(this.libaryVDF.LibraryFolders[1].replace('\\\\', '/') + 'steamapps\\common');
+			}
 
 			this.steamLibaries.forEach(element => {
 				shell.cd(element);
@@ -99,7 +102,7 @@ class Logs {
 				let newestSystemFile = '';
 				let newestMCTSTFile = '';
 
-				if (fs.existsSync('./Realm Royale')) {
+				if (fs.existsSync(element + './Realm Royale')) {
 					this.gamePath = element + '\\Realm Royale';
 					const path = this.gamePath + '\\Binaries\\Logs\\';
 
