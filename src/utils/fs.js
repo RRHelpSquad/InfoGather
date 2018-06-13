@@ -1,5 +1,7 @@
 const fs = require('fs');
 const jsonFile = require('jsonfile');
+const tar = require('tar');
+const zip = require("node-native-zip");
 
 class FS {
 	constructor() {
@@ -28,16 +30,26 @@ class FS {
     }
 	}
 
-	async getTmp() {
-
-	}
-
-	async makeZip() {
-
-	}
-
-	async searchDrive(drive, file) {
-
+	async makeZip(files) {
+    var archive = new zip();
+    
+    archive.addFiles([ 
+        { name: files[0], 					path: this.cwd + "/tmp/" + files[0] },
+				{ name: files[1], 					path: this.cwd + "/tmp/" + files[1] },
+				{ name: "gamelauncher.log", path: this.cwd + "/tmp/gamelauncher.log" },
+				{ name: "launch.log", 			path: this.cwd + "/tmp/launch.log" },
+				{ name: "system.json", 			path: this.cwd + "/tmp/system.json" },
+    ], (err) => {
+        if (err) return console.log("err while adding files", err);
+        
+        var buff = archive.toBuffer();
+        
+        fs.writeFile( this.cwd + "/result.zip", buff, function () {
+            console.log("Finished");
+        });
+    });
+		// let files = ['/tmp/gamelauncher.log']
+		// tar.c({gzip: true, cwd: this.cwd}, files).pipe(fs.createWriteStream(this.cwd + '/my-tarball.tgz'));
 	}
 
 	async removeTmp() {

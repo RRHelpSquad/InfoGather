@@ -17,3 +17,7 @@ event.on("system_done", () => {
   console.log('\nGathering Logs');
   logs._run();
 })
+
+event.on("log_done", () => {
+  fs.makeZip(logs.realmRoyaleFilenames);
+});

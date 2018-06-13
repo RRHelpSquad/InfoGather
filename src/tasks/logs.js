@@ -14,6 +14,7 @@ class Logs {
     this.spinners = ['Realm Royale', 'Realm Royale Launcher', 'EasyAntiCheat']
 
     this.files = { realmRoyale: ["", ""], realmRoyaleLauncher: "", easyAntiCheat: ""}
+    this.realmRoyaleFilenames = []
     this.steamPath = "";
     this.steamLibaries = [];
     this.gamePath = "";
@@ -46,7 +47,7 @@ class Logs {
         await this.fs.copyToTmp(this.files.easyAntiCheat);
       }
 
-       this.event.emit("log_done");
+      this.event.emit("log_done");
     });
 
     try {
@@ -129,7 +130,11 @@ class Logs {
           });
 
           this.files.realmRoyale[0] = path + newestMCTSTFile;
+          this.realmRoyaleFilenames[0] = newestMCTSTFile
+          
           this.files.realmRoyale[1] = path + newestSystemFile;
+          this.realmRoyaleFilenames[1] = newestSystemFile
+
         }
       });
     });
