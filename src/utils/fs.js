@@ -2,6 +2,7 @@ const fs = require('fs');
 const jsonFile = require('jsonfile');
 const tar = require('tar');
 const zip = require("node-native-zip");
+const shell = require("shelljs");
 
 class FS {
 	constructor() {
@@ -44,8 +45,8 @@ class FS {
         
         var buff = archive.toBuffer();
         
-        fs.writeFile( this.cwd + "/result.zip", buff, function () {
-            console.log("Finished");
+        fs.writeFile( this.cwd + "/result.zip", buff, () => {
+					this.removeTmp()
         });
     });
 		// let files = ['/tmp/gamelauncher.log']
@@ -53,7 +54,7 @@ class FS {
 	}
 
 	async removeTmp() {
-
+		shell.rm('-rf', this.cwd + "/tmp/");
 	}
 }
 
