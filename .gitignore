@@ -64,3 +64,4 @@ typings/
 system.json
 tmp/
 result.zip
+*.exe
